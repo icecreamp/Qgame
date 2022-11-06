@@ -59,6 +59,12 @@
     <Compile Include="DesignForm.Designer.cs">
       <DependentUpon>DesignForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Playform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Playform.Designer.cs">
+      <DependentUpon>Playform.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ControlPanel.resx">
@@ -66,6 +72,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DesignForm.resx">
       <DependentUpon>DesignForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Playform.resx">
+      <DependentUpon>Playform.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

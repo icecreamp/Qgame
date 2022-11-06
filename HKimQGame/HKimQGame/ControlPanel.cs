@@ -20,6 +20,8 @@ namespace HKimQGame
 {
     public partial class ControlPanel : Form
     {
+        private DesignForm designform;
+        private Playform playform;
 
         public ControlPanel()
         {
@@ -34,8 +36,8 @@ namespace HKimQGame
 
         private void btnDesign_Click(object sender, EventArgs e)
         {
-            DesignForm designForm = new DesignForm();
-            designForm.Show();
+            designform = new DesignForm();
+            designform.Show();
         }
 
         /// <summary>
@@ -45,7 +47,8 @@ namespace HKimQGame
         /// <param name="e"></param>
         private void btnPlay_Click(object sender, EventArgs e)
         {
-
+            playform = new Playform();
+            playform.Show();
         }
 
         /// <summary>
