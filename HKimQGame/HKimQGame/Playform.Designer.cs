@@ -40,10 +40,10 @@
             this.lblNumOfBox = new System.Windows.Forms.Label();
             this.txtBoxMove = new System.Windows.Forms.TextBox();
             this.txtBoxRemainingBox = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.backgroundPicBox = new System.Windows.Forms.PictureBox();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.backgroundPicBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -69,7 +69,7 @@
             // loadGameToolStripMenuItem
             // 
             this.loadGameToolStripMenuItem.Name = "loadGameToolStripMenuItem";
-            this.loadGameToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.loadGameToolStripMenuItem.Size = new System.Drawing.Size(167, 26);
             this.loadGameToolStripMenuItem.Text = "Load game";
             this.loadGameToolStripMenuItem.Click += new System.EventHandler(this.loadGameToolStripMenuItem_Click);
             // 
@@ -87,7 +87,6 @@
             this.btnUp.TabIndex = 2;
             this.btnUp.Text = "Up";
             this.btnUp.UseVisualStyleBackColor = true;
-            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             // 
             // btnLeft
             // 
@@ -97,7 +96,6 @@
             this.btnLeft.TabIndex = 3;
             this.btnLeft.Text = "Left";
             this.btnLeft.UseVisualStyleBackColor = true;
-            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
             // btnDown
             // 
@@ -107,7 +105,6 @@
             this.btnDown.TabIndex = 4;
             this.btnDown.Text = "Down";
             this.btnDown.UseVisualStyleBackColor = true;
-            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
             // 
             // btnRight
             // 
@@ -117,7 +114,6 @@
             this.btnRight.TabIndex = 5;
             this.btnRight.Text = "Right";
             this.btnRight.UseVisualStyleBackColor = true;
-            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
             // 
             // lblNumOfMove
             // 
@@ -130,10 +126,9 @@
             // 
             // lblNumOfBox
             // 
-            this.lblNumOfBox.AutoSize = true;
             this.lblNumOfBox.Location = new System.Drawing.Point(945, 132);
             this.lblNumOfBox.Name = "lblNumOfBox";
-            this.lblNumOfBox.Size = new System.Drawing.Size(174, 16);
+            this.lblNumOfBox.Size = new System.Drawing.Size(213, 16);
             this.lblNumOfBox.TabIndex = 7;
             this.lblNumOfBox.Text = "Number of remaining boxes:";
             // 
@@ -151,25 +146,25 @@
             this.txtBoxRemainingBox.Size = new System.Drawing.Size(210, 22);
             this.txtBoxRemainingBox.TabIndex = 9;
             // 
-            // pictureBox1
+            // backgroundPicBox
             // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBox1.Location = new System.Drawing.Point(21, 58);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(909, 633);
-            this.pictureBox1.TabIndex = 10;
-            this.pictureBox1.TabStop = false;
+            this.backgroundPicBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.backgroundPicBox.Location = new System.Drawing.Point(21, 58);
+            this.backgroundPicBox.Name = "backgroundPicBox";
+            this.backgroundPicBox.Size = new System.Drawing.Size(909, 633);
+            this.backgroundPicBox.TabIndex = 10;
+            this.backgroundPicBox.TabStop = false;
             // 
-            // openFileDialog1
+            // openFileDialog
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog.FileName = "openFileDialog";
             // 
             // Playform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1219, 716);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.backgroundPicBox);
             this.Controls.Add(this.txtBoxRemainingBox);
             this.Controls.Add(this.txtBoxMove);
             this.Controls.Add(this.lblNumOfBox);
@@ -184,7 +179,7 @@
             this.Text = "Playform";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.backgroundPicBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -204,7 +199,7 @@
         private System.Windows.Forms.Label lblNumOfBox;
         private System.Windows.Forms.TextBox txtBoxMove;
         private System.Windows.Forms.TextBox txtBoxRemainingBox;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.PictureBox backgroundPicBox;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }
