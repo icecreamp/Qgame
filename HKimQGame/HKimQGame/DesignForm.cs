@@ -105,7 +105,7 @@ namespace HKimQGame
                     using (StreamWriter sw = new StreamWriter(fileName))
                     {
                         // Write metadata
-                        sw.WriteLine($"{_pictureBoxArray.GetLength(0)}|{_pictureBoxArray.GetLength(1)}");
+                        sw.WriteLine($"{_pictureBoxArray.GetLength(0)}\n{_pictureBoxArray.GetLength(1)}");
 
                         // Write IDs of pictureboxes
                         foreach (PictureBox pBox in _pictureBoxArray)

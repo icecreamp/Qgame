@@ -40,10 +40,9 @@
             this.lblNumOfBox = new System.Windows.Forms.Label();
             this.txtBoxMove = new System.Windows.Forms.TextBox();
             this.txtBoxRemainingBox = new System.Windows.Forms.TextBox();
-            this.backgroundPicBox = new System.Windows.Forms.PictureBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.backgroundPanel = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.backgroundPicBox)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -146,25 +145,23 @@
             this.txtBoxRemainingBox.Size = new System.Drawing.Size(210, 22);
             this.txtBoxRemainingBox.TabIndex = 9;
             // 
-            // backgroundPicBox
-            // 
-            this.backgroundPicBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.backgroundPicBox.Location = new System.Drawing.Point(21, 58);
-            this.backgroundPicBox.Name = "backgroundPicBox";
-            this.backgroundPicBox.Size = new System.Drawing.Size(909, 633);
-            this.backgroundPicBox.TabIndex = 10;
-            this.backgroundPicBox.TabStop = false;
-            // 
             // openFileDialog
             // 
             this.openFileDialog.FileName = "openFileDialog";
+            // 
+            // backgroundPanel
+            // 
+            this.backgroundPanel.Location = new System.Drawing.Point(42, 58);
+            this.backgroundPanel.Name = "backgroundPanel";
+            this.backgroundPanel.Size = new System.Drawing.Size(850, 633);
+            this.backgroundPanel.TabIndex = 10;
             // 
             // Playform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1219, 716);
-            this.Controls.Add(this.backgroundPicBox);
+            this.Controls.Add(this.backgroundPanel);
             this.Controls.Add(this.txtBoxRemainingBox);
             this.Controls.Add(this.txtBoxMove);
             this.Controls.Add(this.lblNumOfBox);
@@ -179,7 +176,6 @@
             this.Text = "Playform";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.backgroundPicBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -199,7 +195,7 @@
         private System.Windows.Forms.Label lblNumOfBox;
         private System.Windows.Forms.TextBox txtBoxMove;
         private System.Windows.Forms.TextBox txtBoxRemainingBox;
-        private System.Windows.Forms.PictureBox backgroundPicBox;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.Panel backgroundPanel;
     }
 }

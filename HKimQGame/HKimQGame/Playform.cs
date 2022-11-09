@@ -11,14 +11,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static HKimQGame.DesignForm;
+using static System.Net.WebRequestMethods;
 
 namespace HKimQGame
 {
@@ -66,89 +69,64 @@ namespace HKimQGame
                 // Name of the file
                 string fileName = openFileDialog.FileName;
 
-                try
-                {
-                    using (StreamReader _reader = new StreamReader(fileName))
+                using (StreamReader _reader = new StreamReader(fileName))
                     {
-                        if (File.Exists(fileName) && Path.GetExtension(fileName) == ".qgame")
+
+                    int[] fileData = System.IO.File.ReadLines(fileName).Select(line => int.Parse(line)).ToArray();
+
+                    int row = fileData[0];
+                    int column = fileData[1];
+                    _pictureBoxArray = new PictureBox[row, column];
+
+                    for (int i = 0; i < row; i++)
+                    {
+                        for (int j = 0; j < column; j++)
                         {
-                            string[] arrayLength = _reader.ReadLine().Split('|');
-
-                            if (int.TryParse(arrayLength[0], out int row) && int.TryParse(arrayLength[1], out int column) && row > 0 && column > 0)
+                            // Generate pictureboxes
+                            PictureBox picturebox = new PictureBox
                             {
-                                // Generate game
-                                GenerateGame(row, column);
-                            }
-                            else
+                                Name = $"pictureBox{i}",
+                                Size = new Size(TILE_SIZE, TILE_SIZE),
+                                BorderStyle = BorderStyle.Fixed3D,
+                                Location = new Point(i * TILE_SIZE, j * TILE_SIZE)
+                            };
+
+                            switch (fileData[i])
                             {
-                                // Show error message box when user entered invalid data for row and column
-                                MessageBox.Show("Please provie valid data for rows and columns\n(Both must be positive integers)", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                case 0:
+                                    picturebox.Image = null;
+                                    break;
+                                case 1:
+                                    picturebox.Image = Properties.Resources.wall;
+                                    break;
+                                case 2:
+                                    picturebox.Image = Properties.Resources.redDoor;
+                                    break;
+                                case 3:
+                                    picturebox.Image = Properties.Resources.greenDoor;
+                                    break;
+                                case 4:
+                                    picturebox.Image = Properties.Resources.redBox;
+                                    break;
+                                case 5:
+                                    picturebox.Image = Properties.Resources.greenBox;
+                                    break;
+
                             }
+
+                            //picturebox.MouseClick += ClickPictureBox;
+                            picturebox.SizeMode = PictureBoxSizeMode.Zoom;
+                            _pictureBoxArray[i, j] = picturebox;
+
+                            // Add picture boxes in the panel
+                            backgroundPanel.Controls.Add(_pictureBoxArray[i, j]);
                         }
-                        else
-                        {
-                            throw new Exception();
-                        }
-                        // Write metadata
-                        //string arrayLength = _reader.ReadLine(fileName).First();
-
-                        //// Write IDs of pictureboxes
-                        //foreach (PictureBox pBox in _pictureBoxArray)
-                        //{
-                        //    if (pBox.Image != null)
-                        //    {
-
-                        //        switch (pBox.Tag)
-                        //        {
-                        //            case "none":
-                        //                sw.WriteLine((int)TileID.NONE);
-                        //                break;
-
-                        //            case "wall":
-                        //                sw.WriteLine((int)TileID.WALL);
-                        //                break;
-
-                        //            case "redDoor":
-                        //                sw.WriteLine((int)TileID.RED_DOOR);
-                        //                break;
-
-                        //            case "greenDoor":
-                        //                sw.WriteLine((int)TileID.GREEN_DOOR);
-                        //                break;
-
-                        //            case "redBox":
-                        //                sw.WriteLine((int)TileID.RED_BOX);
-                        //                break;
-
-                        //            case "greenBox":
-                        //                sw.WriteLine((int)TileID.GREEN_BOX);
-                        //                break;
-                        //        }
-
-                        //    }
-                        //    else
-                        //    {
-                        //        sw.WriteLine((int)TileID.NONE);
-                        //    }
-                        // }
                     }
-
-                }
-                // Show a message if saving is failed
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error when opening: Please check if it is the right file\nex) (file name).qgame:", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
                 }
 
             }
 
-        }
-
-        public Array GenerateGame(int row, int column)
-        {
-            PictureBox[,] pictureBoxArray = new PictureBox[row, column];
-
-            return pictureBoxArray;
         }
 
     }
