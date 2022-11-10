@@ -28,7 +28,7 @@ namespace HKimQGame
     public partial class Playform : Form
     {
         // Size of the pictureboxes
-        const int TILE_SIZE = 50;
+        const int TILE_SIZE = 55;
 
         // IDs for picturebox items
         public enum TileID
@@ -41,8 +41,11 @@ namespace HKimQGame
             GREEN_BOX = 5
         }
 
+
         // Detect which button is clicked
         Button clickedBtn;
+        PictureBox prevClickedPictureBox;
+        PictureBox clickedPictureBox;
 
         // An array that contains pictureboxes
         private PictureBox[,] _pictureBoxArray;
@@ -50,6 +53,14 @@ namespace HKimQGame
         public Playform()
         {
             InitializeComponent();
+            txtBoxMove.Text = "0";
+            txtBoxRemainingBox.Text = "0";
+            txtBoxMove.Enabled = false;
+            txtBoxRemainingBox.Enabled = false;
+            btnDown.Enabled = false;
+            btnUp.Enabled = false;
+            btnLeft.Enabled = false;
+            btnRight.Enabled = false;
         }
 
         /// <summary>
@@ -61,7 +72,6 @@ namespace HKimQGame
         {
             // Set default file location, name and extention
             openFileDialog.InitialDirectory = @"C:\Users\Desktop";
-            openFileDialog.DefaultExt = "qgame";
             openFileDialog.RestoreDirectory = true;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -70,63 +80,128 @@ namespace HKimQGame
                 string fileName = openFileDialog.FileName;
 
                 using (StreamReader _reader = new StreamReader(fileName))
-                    {
-
+                {
+                    // Read the file and save in an array
                     int[] fileData = System.IO.File.ReadLines(fileName).Select(line => int.Parse(line)).ToArray();
 
+                    // Get the length from the file
                     int row = fileData[0];
                     int column = fileData[1];
+
+                    // skip the two lines of the file
+                    int index = 2;
+
+                    // Set length in picturebox array
                     _pictureBoxArray = new PictureBox[row, column];
 
                     for (int i = 0; i < row; i++)
                     {
                         for (int j = 0; j < column; j++)
-                        {
+                        {                     
                             // Generate pictureboxes
                             PictureBox picturebox = new PictureBox
                             {
                                 Name = $"pictureBox{i}",
                                 Size = new Size(TILE_SIZE, TILE_SIZE),
-                                BorderStyle = BorderStyle.Fixed3D,
                                 Location = new Point(i * TILE_SIZE, j * TILE_SIZE)
                             };
 
-                            switch (fileData[i])
+                            // Set image of pictureboxes
+                            switch (fileData[index])
                             {
                                 case 0:
                                     picturebox.Image = null;
+                                    picturebox.Tag = null;
                                     break;
                                 case 1:
                                     picturebox.Image = Properties.Resources.wall;
+                                    picturebox.Tag = "wall";
                                     break;
                                 case 2:
                                     picturebox.Image = Properties.Resources.redDoor;
+                                    picturebox.Tag = "redDoor";
                                     break;
                                 case 3:
                                     picturebox.Image = Properties.Resources.greenDoor;
+                                    picturebox.Tag = "greenDoor";
                                     break;
                                 case 4:
                                     picturebox.Image = Properties.Resources.redBox;
+                                    picturebox.Tag = "redBox";
                                     break;
                                 case 5:
                                     picturebox.Image = Properties.Resources.greenBox;
+                                    picturebox.Tag = "greenBox";
                                     break;
 
                             }
 
-                            //picturebox.MouseClick += ClickPictureBox;
+                            if(picturebox.Tag == "redBox" || picturebox.Tag == "greenBox")
+                            {
+
+                                 picturebox.MouseClick += ChangeBorderStyle;
+
+                            }
+
                             picturebox.SizeMode = PictureBoxSizeMode.Zoom;
                             _pictureBoxArray[i, j] = picturebox;
 
                             // Add picture boxes in the panel
                             backgroundPanel.Controls.Add(_pictureBoxArray[i, j]);
+                            index++;
                         }
                     }
-                    
+
+                    txtBoxMove.Enabled = true;
+                    txtBoxRemainingBox.Enabled = true;
+                    btnDown.Enabled = true;
+                    btnUp.Enabled = true;
+                    btnLeft.Enabled = true;
+                    btnRight.Enabled = true;
                 }
 
             }
 
+        }
+
+        private void ChangeBorderStyle(object sender, EventArgs e)
+        {
+
+            clickedPictureBox = (PictureBox)sender;        
+
+            if (clickedPictureBox != null && clickedPictureBox.Image != null && clickedPictureBox.Tag == "greenBox" || clickedPictureBox.Tag == "redBox")
+            {
+
+
+                if(prevClickedPictureBox != null && prevClickedPictureBox != clickedPictureBox)
+                {
+                    clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+                    prevClickedPictureBox.BorderStyle = BorderStyle.None;
+                }
+                else if(prevClickedPictureBox == clickedPictureBox || prevClickedPictureBox == null)
+                {
+                    clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+                    prevClickedPictureBox = clickedPictureBox;
+                    clickedPictureBox = null;
+
+                }
+
+                
+            }
+
+            //if(prevClickedPictureBox != null && prevClickedPictureBox != clickedPictureBox)
+            //{
+            //    prevClickedPictureBox.BorderStyle = BorderStyle.None;
+            //}
+
+          
+            //if (prevClickedPictureBox != null && clickedBtn == null)
+            //{
+
+            //    prevClickedPictureBox.BorderStyle = BorderStyle.None;
+
+            //}
+            //clickedBtn = (Button)sender;
         }
 
     }

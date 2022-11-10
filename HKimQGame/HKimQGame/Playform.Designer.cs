@@ -52,7 +52,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1219, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1229, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -153,14 +153,14 @@
             // 
             this.backgroundPanel.Location = new System.Drawing.Point(42, 58);
             this.backgroundPanel.Name = "backgroundPanel";
-            this.backgroundPanel.Size = new System.Drawing.Size(850, 633);
+            this.backgroundPanel.Size = new System.Drawing.Size(850, 676);
             this.backgroundPanel.TabIndex = 10;
             // 
             // Playform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1219, 716);
+            this.ClientSize = new System.Drawing.Size(1229, 762);
             this.Controls.Add(this.backgroundPanel);
             this.Controls.Add(this.txtBoxRemainingBox);
             this.Controls.Add(this.txtBoxMove);
