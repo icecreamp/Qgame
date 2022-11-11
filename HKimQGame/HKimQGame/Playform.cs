@@ -167,41 +167,28 @@ namespace HKimQGame
         private void ChangeBorderStyle(object sender, EventArgs e)
         {
 
-            clickedPictureBox = (PictureBox)sender;        
+            clickedPictureBox = (PictureBox)sender;
+            
 
-            if (clickedPictureBox != null && clickedPictureBox.Image != null && clickedPictureBox.Tag == "greenBox" || clickedPictureBox.Tag == "redBox")
+            if (clickedPictureBox != null)
             {
 
-
-                if(prevClickedPictureBox != null && prevClickedPictureBox != clickedPictureBox)
-                {
-                    clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
-                    prevClickedPictureBox.BorderStyle = BorderStyle.None;
-                }
-                else if(prevClickedPictureBox == clickedPictureBox || prevClickedPictureBox == null)
+                if(prevClickedPictureBox == null)
                 {
                     clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
                     prevClickedPictureBox = clickedPictureBox;
-                    clickedPictureBox = null;
-
+                }
+                else if(clickedPictureBox != prevClickedPictureBox && prevClickedPictureBox != null)
+                {
+                    clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+                    prevClickedPictureBox.BorderStyle = BorderStyle.None;
+                    prevClickedPictureBox = clickedPictureBox;
                 }
 
-                
+
+
             }
 
-            //if(prevClickedPictureBox != null && prevClickedPictureBox != clickedPictureBox)
-            //{
-            //    prevClickedPictureBox.BorderStyle = BorderStyle.None;
-            //}
-
-          
-            //if (prevClickedPictureBox != null && clickedBtn == null)
-            //{
-
-            //    prevClickedPictureBox.BorderStyle = BorderStyle.None;
-
-            //}
-            //clickedBtn = (Button)sender;
         }
 
     }
