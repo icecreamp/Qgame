@@ -225,8 +225,7 @@ namespace HKimQGame
 
         public void MoveBox(object sender, EventArgs e)
         {
-            //clickedPictureBox = (PictureBox)sender;
-            clickedPictureBox.MouseClick += MoveBox;
+            clickedBtn = (Button)sender;
 
             int rowIndex;
             int columnIndex;
@@ -238,15 +237,18 @@ namespace HKimQGame
                 {
                     for (int j = 0; j < _pictureBoxArray.GetLength(1); j++)
                     {
-                        if (_pictureBoxArray[i, j].Equals(clickedBtn))
+                        if (_pictureBoxArray[i, j].Equals(clickedPictureBox))
                         {
+                            columnIndex = i;
+                            rowIndex = j;
+
                             rowIndex = i;
                             columnIndex = j;
-                            changeImg = rowIndex - _pictureBoxArray.GetLength(0);
+                            changeImg = rowIndex - 1;
 
-                            if (clickedBtn == btnUp)
+                            if (clickedBtn == btnLeft)
                             {
-
+                                //lblNumOfBox.Text = $"{rowIndex}, {columnIndex}, {changeImg}";
                                 _pictureBoxArray[changeImg, columnIndex].Image = Properties.Resources.redBox;
                                 clickedPictureBox.Image = null;
                             }
