@@ -86,6 +86,7 @@
             this.btnUp.TabIndex = 2;
             this.btnUp.Text = "Up";
             this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.MoveBox);
             // 
             // btnLeft
             // 
@@ -95,6 +96,7 @@
             this.btnLeft.TabIndex = 3;
             this.btnLeft.Text = "Left";
             this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.Click += new System.EventHandler(this.MoveBox);
             // 
             // btnDown
             // 
@@ -104,6 +106,7 @@
             this.btnDown.TabIndex = 4;
             this.btnDown.Text = "Down";
             this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.MoveBox);
             // 
             // btnRight
             // 
@@ -113,6 +116,7 @@
             this.btnRight.TabIndex = 5;
             this.btnRight.Text = "Right";
             this.btnRight.UseVisualStyleBackColor = true;
+            this.btnRight.Click += new System.EventHandler(this.MoveBox);
             // 
             // lblNumOfMove
             // 
