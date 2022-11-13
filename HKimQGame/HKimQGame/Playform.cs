@@ -28,6 +28,10 @@ namespace HKimQGame
 {
     public partial class Playform : Form
     {
+        // Count the number of moves
+        int numOfMove = 0;
+        int numOfRemainingBox = 0;
+
         // Size of the pictureboxes
         const int TILE_SIZE = 55;
 
@@ -59,10 +63,8 @@ namespace HKimQGame
             InitializeComponent();
 
             // Default 
-            txtBoxMove.Text = "0";
+            txtBoxMove.Text = numOfMove.ToString();
             txtBoxRemainingBox.Text = "0";
-            txtBoxMove.Enabled = false;
-            txtBoxRemainingBox.Enabled = false;
             btnDown.Enabled = false;
             btnUp.Enabled = false;
             btnLeft.Enabled = false;
@@ -121,11 +123,11 @@ namespace HKimQGame
 
             _pictureBoxArray = new PictureBox[row, column];
 
+            // Generate pictureboxes
             for (int i = 0; i < row; i++)
             {
                 for (int j = 0; j < column; j++)
                 {
-                    // Generate pictureboxes
                     PictureBox picturebox = new PictureBox
                     {
                         Name = $"pictureBox{i}",
@@ -151,25 +153,25 @@ namespace HKimQGame
                         case ((int)TileID.GREEN_DOOR):
                             picturebox.Image = Properties.Resources.greenDoor;
                             picturebox.Tag = "greenDoor";
+
                             break;
                         case ((int)TileID.RED_BOX):
                             picturebox.Image = Properties.Resources.redBox;
                             picturebox.Tag = "redBox";
+                            numOfRemainingBox++;
                             break;
                         case ((int)TileID.GREEN_BOX):
                             picturebox.Image = Properties.Resources.greenBox;
                             picturebox.Tag = "greenBox";
+                            numOfRemainingBox++;
                             break;
 
                     }
 
-                    // Add a click event to red box and green box
-                    if (picturebox.Tag == "redBox" || picturebox.Tag == "greenBox")
-                    {
+                    txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
 
-                        picturebox.MouseClick += ChangeBorderStyle;
 
-                    }
+                    picturebox.MouseClick += ChangeBorderStyle;
 
                     picturebox.SizeMode = PictureBoxSizeMode.Zoom;
                     _pictureBoxArray[i, j] = picturebox;
@@ -181,8 +183,6 @@ namespace HKimQGame
             }
 
             // Enable the textboxes and buttons
-            txtBoxMove.Enabled = true;
-            txtBoxRemainingBox.Enabled = true;
             btnDown.Enabled = true;
             btnUp.Enabled = true;
             btnLeft.Enabled = true;
@@ -204,7 +204,7 @@ namespace HKimQGame
             clickedPictureBox = (PictureBox)sender;
             
             // Set borderstyle
-            if (clickedPictureBox != null)
+            if (clickedPictureBox != null && clickedPictureBox.Tag == "redBox" || clickedPictureBox.Tag == "greenBox")
             {
 
                 if(prevClickedPictureBox == null)
@@ -223,37 +223,76 @@ namespace HKimQGame
 
         }
 
+        /// <summary>
+        /// A method that moves the boxes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void MoveBox(object sender, EventArgs e)
         {
             clickedBtn = (Button)sender;
 
-            int rowIndex;
-            int columnIndex;
-            int changeImg;
+            int rowIndex = 0;
+            int columnIndex = 0;
+            // 박스 움직이는건 벽있는곴/박스옆까지만
+            // 남아있는 박스개수세기
+            // 
+
 
             if (clickedBtn != null)
             {
-                for (int i = 0; i < _pictureBoxArray.GetLength(0); i++)
+                // Display error message when user click a button before selecting a box
+                if (clickedPictureBox == null)
                 {
-                    for (int j = 0; j < _pictureBoxArray.GetLength(1); j++)
+                    MessageBox.Show($"Select which box to move first.", "QGame", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                   // MessageBox.Show($"Congratulations\nGame end", "QGame", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                else
+                {
+                    // int index = Array.IndexOf(_pictureBoxArray, clickedPictureBox);
+                    for (int i = 0; i < _pictureBoxArray.GetLength(0); i++)
                     {
-                        if (_pictureBoxArray[i, j].Equals(clickedPictureBox))
+                        for (int j = 0; j < _pictureBoxArray.GetLength(1); j++)
                         {
-                            columnIndex = i;
-                            rowIndex = j;
-
-                            rowIndex = i;
-                            columnIndex = j;
-                            changeImg = rowIndex - 1;
-
-                            if (clickedBtn == btnLeft)
+                            if(_pictureBoxArray[i, j] == clickedPictureBox)
                             {
-                                //lblNumOfBox.Text = $"{rowIndex}, {columnIndex}, {changeImg}";
-                                _pictureBoxArray[changeImg, columnIndex].Image = Properties.Resources.redBox;
-                                clickedPictureBox.Image = null;
+                                rowIndex = i;
+                                columnIndex = j;
                             }
+                            
                         }
                     }
+
+                    
+                    // Move the box 
+                    switch (clickedBtn.Name)
+                    {
+                        case "btnUp":
+                            _pictureBoxArray[rowIndex, 0].Image = clickedPictureBox.Image;
+                            _pictureBoxArray[rowIndex, 0].Tag = "redBox";
+                            _pictureBoxArray[rowIndex, 0].BorderStyle = BorderStyle.FixedSingle;
+                            clickedPictureBox.Image = null;
+                            clickedPictureBox.Tag = null;
+                            clickedPictureBox.BorderStyle = BorderStyle.None;
+                            prevClickedPictureBox = _pictureBoxArray[rowIndex, 0];
+
+                            //MessageBox.Show(index.ToString());
+                            break;
+
+                        case "btnDown":
+                            break;
+
+                        case "btnLeft":
+                            break;
+
+                        case "btnRight":
+                            break;
+                    }
+
+                    numOfMove ++;
+                    txtBoxMove.Text = numOfMove.ToString();
+                    // txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
                 }
             }
 

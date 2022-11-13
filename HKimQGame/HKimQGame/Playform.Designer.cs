@@ -139,6 +139,7 @@
             // 
             this.txtBoxMove.Location = new System.Drawing.Point(948, 88);
             this.txtBoxMove.Name = "txtBoxMove";
+            this.txtBoxMove.ReadOnly = true;
             this.txtBoxMove.Size = new System.Drawing.Size(210, 22);
             this.txtBoxMove.TabIndex = 8;
             // 
@@ -146,6 +147,7 @@
             // 
             this.txtBoxRemainingBox.Location = new System.Drawing.Point(948, 161);
             this.txtBoxRemainingBox.Name = "txtBoxRemainingBox";
+            this.txtBoxRemainingBox.ReadOnly = true;
             this.txtBoxRemainingBox.Size = new System.Drawing.Size(210, 22);
             this.txtBoxRemainingBox.TabIndex = 9;
             // 
