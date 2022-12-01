@@ -3,7 +3,7 @@
  * Revision History 
  * Hyunjin Kim, 2010.11.06: Created 
  * Hyunjin Kim, 2022.11.6: Added code
- * Hyunjin Kim, 2022.11.: Comments added
+ * Hyunjin Kim, 2022.11.31: Comments added
  */
 
 
@@ -78,8 +78,8 @@ namespace HKimQGame
         /// <param name="e"></param>
         private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Set default file location, name and extention
-            openFileDialog.InitialDirectory = @"C:\Users\Desktop";
+            // Set default file location
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);;
             openFileDialog.RestoreDirectory = true;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -96,6 +96,15 @@ namespace HKimQGame
                     // Get the length from the file
                     int row = fileData[0];
                     int column = fileData[1];
+
+                    // Remove exist game in the panel
+                    if (_pictureBoxArray != null)
+                    {
+                        foreach (PictureBox pBox in _pictureBoxArray)
+                        {
+                            backgroundPanel.Controls.Remove(pBox);
+                        }
+                    }
 
                     // Load the game
                     LoadGame(row, column, fileData);
@@ -115,7 +124,7 @@ namespace HKimQGame
         /// <returns></returns>
         public Array LoadGame(int row, int column, int[] fileData)
         {
-            // skip the two lines of the file
+            // Skip the two lines of the file
             int index = 2;
 
             // Set length in picturebox array
@@ -138,10 +147,7 @@ namespace HKimQGame
                     // Set image of pictureboxes
                     switch (fileData[index])
                     {
-                        case ((int)TileID.NONE):
-                            picturebox.Image = null;
-                            picturebox.Tag = null;
-                            break;
+
                         case ((int)TileID.WALL):
                             picturebox.Image = Properties.Resources.wall;
                             picturebox.Tag = "wall";
@@ -153,25 +159,24 @@ namespace HKimQGame
                         case ((int)TileID.GREEN_DOOR):
                             picturebox.Image = Properties.Resources.greenDoor;
                             picturebox.Tag = "greenDoor";
-
                             break;
                         case ((int)TileID.RED_BOX):
                             picturebox.Image = Properties.Resources.redBox;
-                            picturebox.Tag = "redBox";
+                            picturebox.Tag = "redBox"; 
+                            picturebox.MouseClick += ChangeBorderStyle;
                             numOfRemainingBox++;
                             break;
                         case ((int)TileID.GREEN_BOX):
                             picturebox.Image = Properties.Resources.greenBox;
                             picturebox.Tag = "greenBox";
+                            picturebox.BringToFront();
+                            picturebox.MouseClick += ChangeBorderStyle;
                             numOfRemainingBox++;
                             break;
 
                     }
 
                     txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
-
-
-                    picturebox.MouseClick += ChangeBorderStyle;
 
                     picturebox.SizeMode = PictureBoxSizeMode.Zoom;
                     _pictureBoxArray[i, j] = picturebox;
@@ -204,7 +209,7 @@ namespace HKimQGame
             clickedPictureBox = (PictureBox)sender;
             
             // Set borderstyle
-            if (clickedPictureBox != null && clickedPictureBox.Tag == "redBox" || clickedPictureBox.Tag == "greenBox")
+            if (clickedPictureBox != null)
             {
 
                 if(prevClickedPictureBox == null)
@@ -234,10 +239,6 @@ namespace HKimQGame
 
             int rowIndex = 0;
             int columnIndex = 0;
-            // 박스 움직이는건 벽있는곴/박스옆까지만
-            // 남아있는 박스개수세기
-            // 
-
 
             if (clickedBtn != null)
             {
@@ -245,55 +246,30 @@ namespace HKimQGame
                 if (clickedPictureBox == null)
                 {
                     MessageBox.Show($"Select which box to move first.", "QGame", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                   // MessageBox.Show($"Congratulations\nGame end", "QGame", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // MessageBox.Show($"Congratulations\nGame end", "QGame", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 else
                 {
-                    // int index = Array.IndexOf(_pictureBoxArray, clickedPictureBox);
-                    for (int i = 0; i < _pictureBoxArray.GetLength(0); i++)
+
+                   if(clickedBtn == btnUp)
                     {
-                        for (int j = 0; j < _pictureBoxArray.GetLength(1); j++)
-                        {
-                            if(_pictureBoxArray[i, j] == clickedPictureBox)
-                            {
-                                rowIndex = i;
-                                columnIndex = j;
-                            }
-                            
-                        }
+                        clickedPictureBox.Location = new Point(clickedPictureBox.Left, clickedPictureBox.Top - TILE_SIZE);
                     }
-
-                    
-                    // Move the box 
-                    switch (clickedBtn.Name)
+                   if(clickedBtn == btnDown)
                     {
-                        case "btnUp":
-                            _pictureBoxArray[rowIndex, 0].Image = clickedPictureBox.Image;
-                            _pictureBoxArray[rowIndex, 0].Tag = "redBox";
-                            _pictureBoxArray[rowIndex, 0].BorderStyle = BorderStyle.FixedSingle;
-                            clickedPictureBox.Image = null;
-                            clickedPictureBox.Tag = null;
-                            clickedPictureBox.BorderStyle = BorderStyle.None;
-                            prevClickedPictureBox = _pictureBoxArray[rowIndex, 0];
-
-                            //MessageBox.Show(index.ToString());
-                            break;
-
-                        case "btnDown":
-                            break;
-
-                        case "btnLeft":
-                            break;
-
-                        case "btnRight":
-                            break;
+                        clickedPictureBox.Location = new Point(clickedPictureBox.Left, clickedPictureBox.Top + TILE_SIZE);
                     }
-
-                    numOfMove ++;
-                    txtBoxMove.Text = numOfMove.ToString();
-                    // txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
+                    if (clickedBtn == btnLeft)
+                    {
+                        clickedPictureBox.Location = new Point(clickedPictureBox.Left - TILE_SIZE, clickedPictureBox.Top);
+                    }
+                    if (clickedBtn == btnRight)
+                    {
+                        clickedPictureBox.Location = new Point(clickedPictureBox.Left + TILE_SIZE, clickedPictureBox.Top);
+                    }
                 }
+
             }
 
 
