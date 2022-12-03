@@ -62,7 +62,7 @@ namespace HKimQGame
         // A list that contains pictureboxes
         private PictureBox[,] _pictureBoxArray;
 
-        
+
         public Playform()
         {
             InitializeComponent();
@@ -84,7 +84,7 @@ namespace HKimQGame
         private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set default file location
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);;
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); ;
             openFileDialog.RestoreDirectory = true;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -92,9 +92,10 @@ namespace HKimQGame
                 // Name of the file
                 string fileName = openFileDialog.FileName;
 
-                // Read the file
                 using (StreamReader _reader = new StreamReader(fileName))
-                {                
+                {
+
+                    // Load the game
                     try
                     {
                         // Read two lines
@@ -109,9 +110,9 @@ namespace HKimQGame
                             for (int j = 0; j < column; j++)
                             {
 
-                            _reader.ReadLine();
-                            _reader.ReadLine();
-                            pictureboxData[i, j] = int.Parse(_reader.ReadLine());
+                                _reader.ReadLine();
+                                _reader.ReadLine();
+                                pictureboxData[i, j] = int.Parse(_reader.ReadLine());
 
                             }
                         }
@@ -130,13 +131,13 @@ namespace HKimQGame
 
                     }
                     // Display an error message
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         MessageBox.Show($"Error when loading: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
-                  
-                   
+
+
                 }
 
             }
@@ -176,30 +177,30 @@ namespace HKimQGame
                             picturebox.Image = Properties.Resources.wall;
                             picturebox.Tag = "wall";
                             break;
-
                         case ((int)TileID.RED_DOOR):
                             picturebox.Image = Properties.Resources.redDoor;
                             picturebox.Tag = "redDoor";
                             break;
-
                         case ((int)TileID.GREEN_DOOR):
                             picturebox.Image = Properties.Resources.greenDoor;
                             picturebox.Tag = "greenDoor";
                             break;
-
                         case ((int)TileID.RED_BOX):
                             picturebox.Image = Properties.Resources.redBox;
                             picturebox.MouseClick += ChangeBorderStyle;
                             picturebox.Tag = "redBox";
                             numOfRemainingBox++;
                             break;
-
                         case ((int)TileID.GREEN_BOX):
                             picturebox.Image = Properties.Resources.greenBox;
                             picturebox.Tag = "greenBox";
                             picturebox.MouseClick += ChangeBorderStyle;
                             numOfRemainingBox++;
                             break;
+                        default:
+                            picturebox.Tag = "none";
+                            break;
+
                     }
 
                     txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
@@ -207,7 +208,7 @@ namespace HKimQGame
                     picturebox.SizeMode = PictureBoxSizeMode.Zoom;
                     _pictureBoxArray[i, j] = picturebox;
                     // Add picture boxes in the panel
-
+                    Console.WriteLine(pictureboxData[i, j]);
                     backgroundPanel.Controls.Add(_pictureBoxArray[i, j]);
                 }
             }
@@ -233,17 +234,17 @@ namespace HKimQGame
 
             // Get clicked picturebox           
             clickedPictureBox = (PictureBox)sender;
-            
+
             // Set borderstyle
             if (clickedPictureBox != null)
             {
 
-                if(prevClickedPictureBox == null)
+                if (prevClickedPictureBox == null)
                 {
                     clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
                     prevClickedPictureBox = clickedPictureBox;
                 }
-                else if(clickedPictureBox != prevClickedPictureBox && prevClickedPictureBox != null)
+                else if (clickedPictureBox != prevClickedPictureBox && prevClickedPictureBox != null)
                 {
                     clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
                     prevClickedPictureBox.BorderStyle = BorderStyle.None;
@@ -278,7 +279,7 @@ namespace HKimQGame
 
                 else
                 {
-                    // Get the index of the clicked picturebox
+                    bool movedTiles = false;
                     for (int i = 0; i < _pictureBoxArray.GetLength(0); i++)
                     {
 
@@ -292,25 +293,81 @@ namespace HKimQGame
                         }
                     }
 
-                    // Move the button depend on clicked buttons
-                    switch (clickedBtn.Name)
+                    if (clickedBtn == btnUp)
                     {
-                        case "btnUp":
-                           
-                            break;
 
-                        case "btnDown":
-                          
-                            break;
+                        while (_pictureBoxArray[rowOfClickedPicturebox - 1, columnOfClickedPicturebox].Image == null)
+                        {
+                            rowOfClickedPicturebox--;
+                            movedTiles = true;
 
-                        case "btnLeft":
-                           
-                           
-                            break;
+                        }
+                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                        if (movedTiles)
+                            clickedPictureBox.Image = null;
 
-                        case "btnRight":
-                           
-                            break;
+                        clickedPictureBox.BorderStyle = BorderStyle.None;
+                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+
+
+                    }
+                    if (clickedBtn == btnDown)
+                    {
+                        while (_pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Image == null)
+                        {
+
+                            rowOfClickedPicturebox++;
+                            movedTiles = true;
+                        }
+
+                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                        if (movedTiles)
+                            clickedPictureBox.Image = null;
+
+                        clickedPictureBox.BorderStyle = BorderStyle.None;
+                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+
+
+                    }
+                    if (clickedBtn == btnLeft)
+                    {
+
+                        while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Image == null)
+                        {
+
+                            columnOfClickedPicturebox--;
+                            movedTiles = true;
+
+
+                        }
+                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                        if (movedTiles)
+                            clickedPictureBox.Image = null;
+
+                        clickedPictureBox.BorderStyle = BorderStyle.None;
+                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+
+
+
+                    }
+                    if (clickedBtn == btnRight)
+                    {
+                        while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Image == null)
+                        {
+
+                            columnOfClickedPicturebox++;
+                            movedTiles = true;
+                        }
+
+                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                        if (movedTiles)
+                            clickedPictureBox.Image = null;
+                        clickedPictureBox.BorderStyle = BorderStyle.None;
+                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
 
 
                     }
