@@ -92,10 +92,9 @@ namespace HKimQGame
                 // Name of the file
                 string fileName = openFileDialog.FileName;
 
+                // Read the file
                 using (StreamReader _reader = new StreamReader(fileName))
-                {
-
-                    // Load the game
+                {                
                     try
                     {
                         // Read two lines
@@ -166,7 +165,7 @@ namespace HKimQGame
                     {
                         Name = $"pictureBox{i}",
                         Size = new Size(TILE_SIZE, TILE_SIZE),
-                        Location = new Point(i * TILE_SIZE, j * TILE_SIZE)
+                        Location = new Point(j * TILE_SIZE, i * TILE_SIZE)
                     };
 
                     // Set image of pictureboxes
@@ -177,30 +176,30 @@ namespace HKimQGame
                             picturebox.Image = Properties.Resources.wall;
                             picturebox.Tag = "wall";
                             break;
+
                         case ((int)TileID.RED_DOOR):
                             picturebox.Image = Properties.Resources.redDoor;
                             picturebox.Tag = "redDoor";
                             break;
+
                         case ((int)TileID.GREEN_DOOR):
                             picturebox.Image = Properties.Resources.greenDoor;
                             picturebox.Tag = "greenDoor";
                             break;
+
                         case ((int)TileID.RED_BOX):
                             picturebox.Image = Properties.Resources.redBox;
                             picturebox.MouseClick += ChangeBorderStyle;
                             picturebox.Tag = "redBox";
                             numOfRemainingBox++;
                             break;
+
                         case ((int)TileID.GREEN_BOX):
                             picturebox.Image = Properties.Resources.greenBox;
                             picturebox.Tag = "greenBox";
                             picturebox.MouseClick += ChangeBorderStyle;
                             numOfRemainingBox++;
                             break;
-                            default:
-                            picturebox.Tag = "none";
-                            break;
-
                     }
 
                     txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
@@ -297,92 +296,24 @@ namespace HKimQGame
                     switch (clickedBtn.Name)
                     {
                         case "btnUp":
-                            while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Image == null)
-                            {
-
-                                columnOfClickedPicturebox--;
-
-                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                                clickedPictureBox.Image = null;
-                                clickedPictureBox.BorderStyle = BorderStyle.None;
-                                clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                                clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
-
-                            }
-
-
+                           
                             break;
 
                         case "btnDown":
-                            while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Image == null)
-                            {
-
-                                columnOfClickedPicturebox++;
-
-                            }
-
-                            if ((_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Tag == "greenDoor" && clickedBtn.Tag == "greenBox") || (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Tag == "redDoor" && clickedBtn.Tag == "redBox"))
-                            {
-
-                                clickedPictureBox.Image = null;
-                                clickedPictureBox.BorderStyle = BorderStyle.None;
-
-                            }
-                         
-
+                          
                             break;
 
                         case "btnLeft":
-                            while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Image == null)
-                            {
-
-                                rowOfClickedPicturebox--;
-
-                            }
-                            if ((_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Tag == "greenDoor" && clickedBtn.Tag == "greenBox") || (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Tag == "redDoor" && clickedBtn.Tag == "redBox"))
-                            {
-
-                                clickedPictureBox.Image = null;
-                                clickedPictureBox.BorderStyle = BorderStyle.None;
-
-                            }
-                         
+                           
+                           
                             break;
 
                         case "btnRight":
-                            while (_pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Image == null)
-                            {
-
-                                rowOfClickedPicturebox++;
-
-                            }
-                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                                clickedPictureBox.Image = null;
-                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = clickedPictureBox.BorderStyle;
-                                clickedPictureBox.BorderStyle = BorderStyle.None;
-
-                            if (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag == "greenBox" && _pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Tag == "greenDoor")
-                            {
-
-                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag = null;
-                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = null;
-                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = BorderStyle.None;
-                                numOfRemainingBox--;
-                                txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
-
-                            }
-                               
+                           
                             break;
 
 
                     }
-
-
-                    //_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                    //clickedPictureBox.Image = null;
-                    //clickedPictureBox.BorderStyle = BorderStyle.None;
-                    //clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                    //clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
 
                     numOfMove++;
                     txtBoxMove.Text = numOfMove.ToString();
