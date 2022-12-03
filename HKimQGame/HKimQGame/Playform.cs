@@ -208,7 +208,7 @@ namespace HKimQGame
                     picturebox.SizeMode = PictureBoxSizeMode.Zoom;
                     _pictureBoxArray[i, j] = picturebox;
                     // Add picture boxes in the panel
-                    Console.WriteLine(pictureboxData[i, j]);
+
                     backgroundPanel.Controls.Add(_pictureBoxArray[i, j]);
                 }
             }
@@ -279,7 +279,7 @@ namespace HKimQGame
 
                 else
                 {
-                    bool movedTiles = false;
+                    // Get the index of the clicked picturebox
                     for (int i = 0; i < _pictureBoxArray.GetLength(0); i++)
                     {
 
@@ -293,84 +293,96 @@ namespace HKimQGame
                         }
                     }
 
-                    if (clickedBtn == btnUp)
+                    // Move the button depend on clicked buttons
+                    switch (clickedBtn.Name)
                     {
-                        
-                        while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Image == null)
-                        {
-                            columnOfClickedPicturebox--;   
-                            movedTiles = true;
+                        case "btnUp":
+                            while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Image == null)
+                            {
 
-                        }
-                         _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                        if(movedTiles)
-                          clickedPictureBox.Image = null;
+                                columnOfClickedPicturebox--;
 
-                        clickedPictureBox.BorderStyle = BorderStyle.None;
-                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+                                clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                                clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+
+                            }
+
+
+                            break;
+
+                        case "btnDown":
+                            while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Image == null)
+                            {
+
+                                columnOfClickedPicturebox++;
+
+                            }
+
+                            if ((_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Tag == "greenDoor" && clickedBtn.Tag == "greenBox") || (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Tag == "redDoor" && clickedBtn.Tag == "redBox"))
+                            {
+
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                            }
+                         
+
+                            break;
+
+                        case "btnLeft":
+                            while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Image == null)
+                            {
+
+                                rowOfClickedPicturebox--;
+
+                            }
+                            if ((_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Tag == "greenDoor" && clickedBtn.Tag == "greenBox") || (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Tag == "redDoor" && clickedBtn.Tag == "redBox"))
+                            {
+
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                            }
+                         
+                            break;
+
+                        case "btnRight":
+                            while (_pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Image == null)
+                            {
+
+                                rowOfClickedPicturebox++;
+
+                            }
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                                clickedPictureBox.Image = null;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = clickedPictureBox.BorderStyle;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                            if (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag == "greenBox" && _pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Tag == "greenDoor")
+                            {
+
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag = null;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = null;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = BorderStyle.None;
+                                numOfRemainingBox--;
+                                txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
+
+                            }
+                               
+                            break;
 
 
                     }
-                    if (clickedBtn == btnDown)
-                    {
-                        while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Image == null)
-                        {
-
-                            columnOfClickedPicturebox++;
-                            movedTiles = true;
-                        }
-
-                            _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                        if (movedTiles)
-                            clickedPictureBox.Image = null;
-
-                        clickedPictureBox.BorderStyle = BorderStyle.None;
-                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
 
 
-                    }
-                    if (clickedBtn == btnLeft)
-                    {
-
-                        while (_pictureBoxArray[rowOfClickedPicturebox - 1, columnOfClickedPicturebox].Image == null)
-                        {
-
-                            rowOfClickedPicturebox--;
-                            movedTiles = true;
-
-
-                        }
-                            _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                        if (movedTiles)
-                            clickedPictureBox.Image = null;
-
-                        clickedPictureBox.BorderStyle = BorderStyle.None;
-                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
-
-
-
-                    }
-                    if (clickedBtn == btnRight)
-                    {
-                        while (_pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Image == null)
-                        {
-                        
-                            rowOfClickedPicturebox++;
-                            movedTiles = true;
-                        }      
-
-                            _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                        if (movedTiles)
-                            clickedPictureBox.Image = null;
-                        clickedPictureBox.BorderStyle = BorderStyle.None;
-                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
-
-                 
-                    }
+                    //_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                    //clickedPictureBox.Image = null;
+                    //clickedPictureBox.BorderStyle = BorderStyle.None;
+                    //clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                    //clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
 
                     numOfMove++;
                     txtBoxMove.Text = numOfMove.ToString();
