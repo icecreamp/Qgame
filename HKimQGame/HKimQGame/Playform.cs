@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using static HKimQGame.DesignForm;
 using static System.Net.WebRequestMethods;
 
@@ -84,7 +85,7 @@ namespace HKimQGame
         private void loadGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Set default file location
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); ;
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             openFileDialog.RestoreDirectory = true;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -166,7 +167,7 @@ namespace HKimQGame
                     {
                         Name = $"pictureBox{i}",
                         Size = new Size(TILE_SIZE, TILE_SIZE),
-                        Location = new Point(j * TILE_SIZE, i * TILE_SIZE)
+                        Location = new Point( j * TILE_SIZE, i * TILE_SIZE)
                     };
 
                     // Set image of pictureboxes
@@ -180,6 +181,7 @@ namespace HKimQGame
                         case ((int)TileID.RED_DOOR):
                             picturebox.Image = Properties.Resources.redDoor;
                             picturebox.Tag = "redDoor";
+
                             break;
                         case ((int)TileID.GREEN_DOOR):
                             picturebox.Image = Properties.Resources.greenDoor;
@@ -198,17 +200,18 @@ namespace HKimQGame
                             numOfRemainingBox++;
                             break;
                         default:
-                            picturebox.Tag = "none";
+                            picturebox.Tag = null;
                             break;
 
                     }
 
+                    // put the number of created box in the textbox
                     txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
 
                     picturebox.SizeMode = PictureBoxSizeMode.Zoom;
                     _pictureBoxArray[i, j] = picturebox;
+
                     // Add picture boxes in the panel
-                    Console.WriteLine(pictureboxData[i, j]);
                     backgroundPanel.Controls.Add(_pictureBoxArray[i, j]);
                 }
             }
@@ -274,12 +277,12 @@ namespace HKimQGame
                 if (clickedPictureBox == null)
                 {
                     MessageBox.Show($"Select which box to move first.", "QGame", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    // MessageBox.Show($"Congratulations\nGame end", "QGame", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 }
 
                 else
                 {
-                    bool movedTiles = false;
+                    // Get the index of the selected box
                     for (int i = 0; i < _pictureBoxArray.GetLength(0); i++)
                     {
 
@@ -292,94 +295,97 @@ namespace HKimQGame
                             }
                         }
                     }
+                    Console.WriteLine(rowOfClickedPicturebox);
+                    Console.WriteLine(columnOfClickedPicturebox);
 
-                    if (clickedBtn == btnUp)
+                    switch (clickedBtn.Name)
                     {
 
-                        while (_pictureBoxArray[rowOfClickedPicturebox - 1, columnOfClickedPicturebox].Image == null)
-                        {
-                            rowOfClickedPicturebox--;
-                            movedTiles = true;
+                        case "btnUp":
 
-                        }
-                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                        if (movedTiles)
-                            clickedPictureBox.Image = null;
+                            // detect if the pictureboxes in the row are empty
+                            while (_pictureBoxArray[rowOfClickedPicturebox - 1, columnOfClickedPicturebox].Tag == null)
+                            {
+                                rowOfClickedPicturebox--;
+                            }                                              
 
-                        clickedPictureBox.BorderStyle = BorderStyle.None;
-                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+                            break;
 
 
-                    }
-                    if (clickedBtn == btnDown)
-                    {
-                        while (_pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Image == null)
-                        {
+                        case "btnDown":
 
-                            rowOfClickedPicturebox++;
-                            movedTiles = true;
-                        }
+                            // Detect if the pictureboxes in the row are empty
+                            while (_pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Tag == null)
+                            {
+                                rowOfClickedPicturebox++;
+                            }
 
-                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                        if (movedTiles)
-                            clickedPictureBox.Image = null;
+                            break;
 
-                        clickedPictureBox.BorderStyle = BorderStyle.None;
-                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+                        case "btnLeft":
 
+                            // Detevt if the pictureboxes in the column are empty
+                            while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Tag == null)
+                            {
+                                columnOfClickedPicturebox--;
+                            }
 
-                    }
-                    if (clickedBtn == btnLeft)
-                    {
-
-                        while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Image == null)
-                        {
-
-                            columnOfClickedPicturebox--;
-                            movedTiles = true;
+                            break;
 
 
-                        }
-                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                        if (movedTiles)
-                            clickedPictureBox.Image = null;
+                        case "btnRight":
 
-                        clickedPictureBox.BorderStyle = BorderStyle.None;
-                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
+                            // Detect if the pictureboxes in the column are empty
+                            while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Tag == null)
+                            {
+                                columnOfClickedPicturebox++;
+                            }
 
-
-
-                    }
-                    if (clickedBtn == btnRight)
-                    {
-                        while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Image == null)
-                        {
-
-                            columnOfClickedPicturebox++;
-                            movedTiles = true;
-                        }
-
-                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                        if (movedTiles)
-                            clickedPictureBox.Image = null;
-                        clickedPictureBox.BorderStyle = BorderStyle.None;
-                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                        clickedPictureBox.BorderStyle = BorderStyle.FixedSingle;
-
-
+                            break;
                     }
 
-                    numOfMove++;
-                    txtBoxMove.Text = numOfMove.ToString();
+                        // Put the image and tag of the clicked box in the new picturebox
+                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag = clickedPictureBox.Tag;
+                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = clickedPictureBox.BorderStyle;
+                        clickedPictureBox.Image = null;
+                        clickedPictureBox.Tag = null;
+                        clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                        clickedPictureBox.BringToFront();
+                        Console.WriteLine(rowOfClickedPicturebox);
+                        Console.WriteLine(columnOfClickedPicturebox);
+                   
+                
+
                 }
 
             }
 
-
         }
 
+        /// <summary>
+        /// Count the number of remaining boxes and reset the form if it's 0
+        /// </summary>
+        /// <param name="numOfRemainingBox"></param>
+        public void CheckRemainingBox(int numOfRemainingBox)
+        {
+            if (numOfRemainingBox == 0)
+            {
+                MessageBox.Show("Congratulations!\nGame end", "Qgame", MessageBoxButtons.OKCancel, MessageBoxIcon.None);
+                foreach (PictureBox pbox in _pictureBoxArray)
+                {
+                    this.Controls.Remove(pbox);
+                }
+                _pictureBoxArray = null;
+            }
+
+            else
+            {
+                numOfRemainingBox--;
+                txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
+            }
+        }
     }
 }
