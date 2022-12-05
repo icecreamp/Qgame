@@ -70,7 +70,7 @@ namespace HKimQGame
 
             // Default 
             txtBoxMove.Text = numOfMove.ToString();
-            txtBoxRemainingBox.Text = "0";
+            txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
             btnDown.Enabled = false;
             btnUp.Enabled = false;
             btnLeft.Enabled = false;
@@ -125,6 +125,12 @@ namespace HKimQGame
                             {
                                 backgroundPanel.Controls.Remove(pBox);
                             }
+
+                            numOfMove = 0;
+                            numOfRemainingBox = 0;
+                            txtBoxMove.Text = numOfMove.ToString();
+                            txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
+
                         }
 
                         // Load the game
@@ -136,8 +142,6 @@ namespace HKimQGame
                     {
                         MessageBox.Show($"Error when loading: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-
 
                 }
 
@@ -155,7 +159,6 @@ namespace HKimQGame
         public Array LoadGame(int row, int column, int[,] pictureboxData)
         {
 
-
             _pictureBoxArray = new PictureBox[row, column];
 
             // Generate pictureboxes
@@ -167,7 +170,7 @@ namespace HKimQGame
                     {
                         Name = $"pictureBox{i}",
                         Size = new Size(TILE_SIZE, TILE_SIZE),
-                        Location = new Point( j * TILE_SIZE, i * TILE_SIZE)
+                        Location = new Point(j * TILE_SIZE, i * TILE_SIZE)
                     };
 
                     // Set image of pictureboxes
@@ -205,8 +208,9 @@ namespace HKimQGame
 
                     }
 
-                    // put the number of created box in the textbox
-                    txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
+                 
+                    // Display the number of the boxes
+                    txtBoxRemainingBox.Text = numOfRemainingBox.ToString();      
 
                     picturebox.SizeMode = PictureBoxSizeMode.Zoom;
                     _pictureBoxArray[i, j] = picturebox;
@@ -265,10 +269,11 @@ namespace HKimQGame
         /// <param name="e"></param>
         public void MoveBox(object sender, EventArgs e)
         {
-
+            // initialize variables
             int rowOfClickedPicturebox = 0;
             int columnOfClickedPicturebox = 0;
 
+            // Button that user clicked
             clickedBtn = (Button)sender;
 
             if (clickedBtn != null)
@@ -277,11 +282,14 @@ namespace HKimQGame
                 if (clickedPictureBox == null)
                 {
                     MessageBox.Show($"Select which box to move first.", "QGame", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                 }
 
                 else
                 {
+                    // Count how many times they moved
+                    numOfMove++;
+                    txtBoxMove.Text = numOfMove.ToString();
+
                     // Get the index of the selected box
                     for (int i = 0; i < _pictureBoxArray.GetLength(0); i++)
                     {
@@ -295,8 +303,9 @@ namespace HKimQGame
                             }
                         }
                     }
-                    Console.WriteLine(rowOfClickedPicturebox);
-                    Console.WriteLine(columnOfClickedPicturebox);
+                   
+                    // A variable that detects empty pictureboxes
+                    bool tileMoved = false;
 
                     switch (clickedBtn.Name)
                     {
@@ -307,8 +316,33 @@ namespace HKimQGame
                             while (_pictureBoxArray[rowOfClickedPicturebox - 1, columnOfClickedPicturebox].Tag == null)
                             {
                                 rowOfClickedPicturebox--;
-                            }                                              
+                                tileMoved = true;
+                            }
+                            // Put the image and tag of the clicked box in the new picturebox
+                            if (tileMoved)
+                            {
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag = clickedPictureBox.Tag;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = clickedPictureBox.BorderStyle;
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.Tag = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
 
+                                clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                                clickedPictureBox.BringToFront();
+                            }
+
+                            // if the box meets a door, make it invisible
+                            if (_pictureBoxArray[rowOfClickedPicturebox - 1, columnOfClickedPicturebox].Tag == "greenDoor" && clickedPictureBox.Tag == "greenBox" || _pictureBoxArray[rowOfClickedPicturebox - 1, columnOfClickedPicturebox].Tag == "redDoor" && clickedPictureBox.Tag == "redBox")
+                            {
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.Tag = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                                // Check the remaining box
+                                CheckRemainingBox(numOfRemainingBox);
+
+                            }
                             break;
 
 
@@ -318,9 +352,35 @@ namespace HKimQGame
                             while (_pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Tag == null)
                             {
                                 rowOfClickedPicturebox++;
+                                tileMoved = true;
+                            }
+                            // Put the image and tag of the clicked box in the new picturebox
+                            if (tileMoved)
+                            {
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag = clickedPictureBox.Tag;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = clickedPictureBox.BorderStyle;
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.Tag = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                                clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                                clickedPictureBox.BringToFront();
                             }
 
+                            // if the box meets a door, make it invisible
+                            if (_pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Tag == "greenDoor" && clickedPictureBox.Tag == "greenBox" || _pictureBoxArray[rowOfClickedPicturebox + 1, columnOfClickedPicturebox].Tag == "redDoor" && clickedPictureBox.Tag == "redBox")
+                            {
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.Tag = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                                // Check the remaining box
+                                CheckRemainingBox(numOfRemainingBox);
+
+                            }
                             break;
+
 
                         case "btnLeft":
 
@@ -328,8 +388,33 @@ namespace HKimQGame
                             while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Tag == null)
                             {
                                 columnOfClickedPicturebox--;
+                                tileMoved = true;
+                            }
+                            // Put the image and tag of the clicked box in the new picturebox
+                            if (tileMoved)
+                            {
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag = clickedPictureBox.Tag;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = clickedPictureBox.BorderStyle;
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.Tag = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                                clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                                clickedPictureBox.BringToFront();
                             }
 
+                            // if the box meets a door, make it invisible
+                            if (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Tag == "greenDoor" && clickedPictureBox.Tag == "greenBox" || _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox - 1].Tag == "redDoor" && clickedPictureBox.Tag == "redBox")
+                            {
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.Tag = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                                // Check the remaining box
+                                CheckRemainingBox(numOfRemainingBox);
+
+                            }
                             break;
 
 
@@ -339,25 +424,38 @@ namespace HKimQGame
                             while (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Tag == null)
                             {
                                 columnOfClickedPicturebox++;
+                                tileMoved = true;
+                            }
+                            // Put the image and tag of the clicked box in the new picturebox
+                            if (tileMoved)
+                            {
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag = clickedPictureBox.Tag;
+                                _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = clickedPictureBox.BorderStyle;
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.Tag = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                                clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
+                                clickedPictureBox.BringToFront();
                             }
 
+                            // if the box meets a door, make it invisible
+                            if (_pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Tag == "greenDoor" && clickedPictureBox.Tag == "greenBox" || _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox + 1].Tag == "redDoor" && clickedPictureBox.Tag == "redBox")
+                            {
+                                clickedPictureBox.Image = null;
+                                clickedPictureBox.Tag = null;
+                                clickedPictureBox.BorderStyle = BorderStyle.None;
+
+                                // Check the remaining box
+                                CheckRemainingBox(numOfRemainingBox);
+
+                            }
                             break;
+
                     }
 
-                        // Put the image and tag of the clicked box in the new picturebox
-                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Image = clickedPictureBox.Image;
-                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].Tag = clickedPictureBox.Tag;
-                        _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox].BorderStyle = clickedPictureBox.BorderStyle;
-                        clickedPictureBox.Image = null;
-                        clickedPictureBox.Tag = null;
-                        clickedPictureBox.BorderStyle = BorderStyle.None;
-
-                        clickedPictureBox = _pictureBoxArray[rowOfClickedPicturebox, columnOfClickedPicturebox];
-                        clickedPictureBox.BringToFront();
-                        Console.WriteLine(rowOfClickedPicturebox);
-                        Console.WriteLine(columnOfClickedPicturebox);
-                   
-                
+                    
 
                 }
 
@@ -371,21 +469,28 @@ namespace HKimQGame
         /// <param name="numOfRemainingBox"></param>
         public void CheckRemainingBox(int numOfRemainingBox)
         {
+            // Count remaining boxes
+            txtBoxRemainingBox.Text = (int.Parse(txtBoxRemainingBox.Text) - 1).ToString();
+            numOfRemainingBox = int.Parse(txtBoxRemainingBox.Text);
+
+            // If there's no box
             if (numOfRemainingBox == 0)
             {
+                // Display a message
                 MessageBox.Show("Congratulations!\nGame end", "Qgame", MessageBoxButtons.OKCancel, MessageBoxIcon.None);
+
+                // Reset the form
                 foreach (PictureBox pbox in _pictureBoxArray)
                 {
-                    this.Controls.Remove(pbox);
+                    backgroundPanel.Controls.Remove(pbox);
                 }
                 _pictureBoxArray = null;
+
+                numOfMove = 0;
+                txtBoxMove.Text = numOfMove.ToString();
             }
 
-            else
-            {
-                numOfRemainingBox--;
-                txtBoxRemainingBox.Text = numOfRemainingBox.ToString();
-            }
+
         }
     }
 }
